@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Escape the Evil AI · Server Vault</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Consolas, "Courier New", monospace;
+        background: #0b1020;
+        color: #d7e0ff;
+        text-align: center;
+        cursor: pointer;
+        user-select: none;
+      }
+      p {
+        max-width: 28rem;
+        line-height: 1.5;
+        padding: 1rem;
+      }
+    </style>
+</head>
+<body>
+    <!--
+      Click-to-start is required so browsers allow alert/prompt/confirm.
+      The adventure itself still uses only dialogs + console (no game UI DOM).
+    -->
+    <p id="start-message">
+      Left-click anywhere to begin<br />
+      Escape the Evil AI - Server Vault<br />
+      <small>(If you opened this with middle-click, click once here after the tab is in front.)</small>
+    </p>
+    <script src="js/adventure.js"></script>
+</body>
+</html>
