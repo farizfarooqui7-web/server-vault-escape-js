@@ -86,8 +86,6 @@ function logStatus(message) {
  * Returns a trimmed lowercase string, or null if they pressed Cancel.
  */
 function askChoice(question, options) {
-  let blockedRetries = 0;
-
   while (true) {
     let message = question + "\n\n";
     message += "Type one of the options below:\n";
@@ -96,31 +94,7 @@ function askChoice(question, options) {
     }
     message += "\n(Press Cancel to quit the adventure.)";
 
-    const openedAt = performance.now();
     const raw = prompt(message);
-    const closedTooFast = performance.now() - openedAt < 120;
-
-    // Background / blocked tabs auto-cancel prompts instantly.
-    // That is NOT a real Cancel - wait for a real gesture and ask again.
-    if (raw === null && closedTooFast) {
-      blockedRetries += 1;
-      console.warn(
-        "⚠️ Browser blocked or auto-cancelled the prompt. Waiting to retry...",
-      );
-      if (blockedRetries > 5) {
-        alert(
-          "⚠️ The browser kept blocking prompts.\n\n" +
-            "Refresh the page, make sure this tab is in front, then left-click once to start.",
-        );
-        return null;
-      }
-      alert(
-        "⚠️ The browser blocked that prompt (common when the tab opened in the background).\n\n" +
-          "Click OK, bring this tab to the front, then continue.",
-      );
-      confirm("Click OK when this tab is in front and you are ready to continue.");
-      continue;
-    }
 
     if (raw === null) {
       return null;
@@ -493,31 +467,4 @@ function runAdventure() {
   }
 }
 
-// Browsers often block/auto-cancel dialogs when:
-// - the script starts on page load, or
-// - the tab was opened with middle-click (background tab), or
-// - the same middle-click "leaks" onto the new page and starts the game too early.
-// Require a real left-click after the page has settled, while the tab is visible.
-function armStartOnClick() {
-  const pageReadyAt = performance.now();
-
-  function begin(event) {
-    if (event.button !== 0) {
-      return;
-    }
-    if (document.visibilityState !== "visible") {
-      return;
-    }
-    // Ignore the click that opened this tab (middle-click / ctrl-click).
-    if (performance.now() - pageReadyAt < 400) {
-      return;
-    }
-
-    document.removeEventListener("click", begin);
-    runAdventure();
-  }
-
-  document.addEventListener("click", begin);
-}
-
-armStartOnClick();
+runAdventure();
